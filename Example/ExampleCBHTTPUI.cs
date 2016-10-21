@@ -7,7 +7,6 @@ public class ExampleCBHTTPUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_contentAreaRect = new Rect (Screen.width/2 - _contentWidth / 2, 10, _contentWidth, _contentHeight);
 	}
 
 	private string ServerAddress = "https://<Your Address>.azurewebsites.net/";
@@ -34,53 +33,48 @@ public class ExampleCBHTTPUI : MonoBehaviour {
 	}
 
 	private IEnumerator  WaitForRequest(WWW www) {
-
-		yield return www;
-
-		if (www.error != null) {
-			
-			ResponseData = "[Error] " + www.error;
-
-		} else {
-			
-			ResponseData = www.text;
-
-		}
-
-		www.Dispose();
+		
 	}
 
-	private Rect _contentAreaRect;
-	private float _contentWidth = 600;
-	private float _contentHeight = 800;
+	public int scrollWidth = 530;
+	public int scrollHeight = 600;
+
+	private Vector2 scrollPosition = Vector2.zero;
 
 	public void OnGUI(){
-		GUILayout.BeginArea(_contentAreaRect);
-			GUILayout.BeginVertical ();
-				GUILayout.BeginHorizontal ("box");
-					GUILayout.Label("Server Address : ", GUILayout.Width(100));
-					ServerAddress = GUILayout.TextField(ServerAddress, GUILayout.Width(_contentWidth - 125));
-				GUILayout.EndHorizontal ();
-				GUILayout.BeginHorizontal ("box");
-					GUILayout.Label("Path : ", GUILayout.Width(100));
-					PathString = GUILayout.TextField(PathString, GUILayout.Width(_contentWidth-125));
-				GUILayout.EndHorizontal ();
-				GUILayout.BeginHorizontal ();
-					if (GUILayout.Button ("Send", GUILayout.Width (80))) {
-						HTTPRequestSend ();
-					}
-					if (GUILayout.Button ("Auth Send ", GUILayout.Width (80))) {
-						HTTPRequestAuthSend ();
-					}
-				GUILayout.EndHorizontal ();
-				GUILayout.Label ("");
-				GUILayout.Label ("Request Data : ");
-				RequestData = GUILayout.TextArea (RequestData, GUILayout.Width(_contentWidth), GUILayout.Height(50));
+		
+		scrollPosition = GUI.BeginScrollView(new Rect(0, 0, scrollWidth, scrollHeight), scrollPosition, new Rect(0, 0, 520, 600), true, true);
 
-				GUILayout.Label ("");
-				GUILayout.Label ("Response Data : ");
-				ResponseData = GUILayout.TextArea (ResponseData, GUILayout.Width(_contentWidth), GUILayout.Height(300));
-			GUILayout.EndVertical ();
-		GUILayout.EndArea ();
+		GUILayout.BeginVertical ();
+			GUILayout.BeginHorizontal ("box");
+				GUILayout.Label("Server Address : ", GUILayout.Width(100));
+				ServerAddress = GUILayout.TextField(ServerAddress, GUILayout.Width(400));
+			GUILayout.EndHorizontal ();
+
+			GUILayout.BeginHorizontal ("box");
+				GUILayout.Label("Path : ", GUILayout.Width(100));
+				PathString = GUILayout.TextField(PathString, GUILayout.Width(400));
+			GUILayout.EndHorizontal ();
+
+			GUILayout.BeginHorizontal ();
+				if (GUILayout.Button ("Send", GUILayout.Width (80))) {
+					HTTPRequestSend ();
+				}
+				if (GUILayout.Button ("Auth Send ", GUILayout.Width (80))) {
+					HTTPRequestAuthSend ();
+				}
+			GUILayout.EndHorizontal ();
+
+			GUILayout.Label ("");
+
+			GUILayout.Label ("Request Data : ");
+			RequestData = GUILayout.TextArea (RequestData, GUILayout.Width(520), GUILayout.Height(50));
+
+			GUILayout.Label ("");
+			GUILayout.Label ("Response Data : ");
+			ResponseData = GUILayout.TextArea (ResponseData, GUILayout.Width(520), GUILayout.Height(300));
+		GUILayout.EndVertical ();
+
+		GUI.EndScrollView();
 	}
 }
